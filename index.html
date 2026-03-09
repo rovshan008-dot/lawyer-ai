@@ -412,7 +412,7 @@ body {
     <div class="hdr-title">Юрист AI</div>
     <div class="hdr-sub">КОНСУЛЬТАНТ · РОССИЙСКОЕ ПРАВО</div>
   </div>
-  <button class="hdr-key-btn" id="keyBtn" onclick="openModal()">🔑 API</button>
+  
 </div>
 
 <!-- TABS -->
@@ -477,87 +477,7 @@ body {
 </div>
 
 <script>
-// ════════════════════════════════
-// ОБЛАСТИ ПРАВА
-// ════════════════════════════════
-const AREAS = [
-  { key:'contracts', icon:'📄', title:'Договоры',          sub:'Составление, проверка, расторжение, споры по договорам' },
-  { key:'labor',     icon:'👷', title:'Трудовое право',     sub:'Увольнение, зарплата, отпуск, трудовые споры' },
-  { key:'criminal',  icon:'⚖️', title:'Уголовное право',    sub:'Статьи УК, защита прав, процессуальные вопросы' },
-  { key:'family',    icon:'👨‍👩‍👧', title:'Семейное право',    sub:'Развод, алименты, раздел имущества, опека' },
-  { key:'business',  icon:'🏢', title:'Бизнес / ООО / ИП', sub:'Регистрация, ликвидация, корпоративные споры' },
-  { key:'realty',    icon:'🏠', title:'Недвижимость',       sub:'Купля-продажа, аренда, ипотека, приватизация' },
-  { key:'admin',     icon:'📋', title:'Административное',   sub:'Штрафы, нарушения, обжалование постановлений' },
-  { key:'inherit',   icon:'📜', title:'Наследство',         sub:'Завещание, вступление, споры о наследстве' },
-  { key:'consumer',  icon:'🛒', title:'Защита потребителей',sub:'Возврат товара, некачественные услуги, претензии' },
-  { key:'tax',       icon:'🧾', title:'Налоговое право',    sub:'Налоги, вычеты, споры с ФНС, декларации' },
-];
 
-const AREA_PROMPTS = {
-  contracts: 'Специализируйся на договорном праве: ГК РФ, виды договоров, существенные условия, расторжение, ответственность сторон.',
-  labor:     'Специализируйся на трудовом праве: ТК РФ, основания увольнения, выплаты, СОУТ, трудовые споры, инспекция труда.',
-  criminal:  'Специализируйся на уголовном праве: УК РФ, УПК РФ, квалификация преступлений, права подозреваемого/обвиняемого, адвокатская помощь.',
-  family:    'Специализируйся на семейном праве: СК РФ, расторжение брака, алименты (ст.81-83 СК), раздел имущества (ст.34-38 СК), опека.',
-  business:  'Специализируйся на корпоративном праве: ФЗ об ООО, ФЗ об ИП, регистрация (ФЗ №129), ликвидация, уставной капитал, участники.',
-  realty:    'Специализируйся на праве недвижимости: ЖК РФ, ФЗ о регистрации недвижимости, ипотека (ФЗ №102), долевое строительство (ФЗ №214).',
-  admin:     'Специализируйся на административном праве: КоАП РФ, обжалование постановлений (ст.30.1 КоАП), сроки, порядок подачи жалоб.',
-  inherit:   'Специализируйся на наследственном праве: ГК РФ часть 3, очерёдность наследников (ст.1142-1145), завещание, обязательная доля (ст.1149).',
-  consumer:  'Специализируйся на защите прав потребителей: Закон о ЗПП, возврат товара (ст.18,25 ЗПП), претензионный порядок, Роспотребнадзор.',
-  tax:       'Специализируйся на налоговом праве: НК РФ, НДФЛ, налоговые вычеты (ст.218-220 НК), декларации, споры с ФНС, сроки.',
-};
-
-// ════════════════════════════════
-// СИСТЕМНЫЙ ПРОМПТ
-// ════════════════════════════════
-function buildSystem(areaKey) {
-  let base = `Ты — профессиональный юрист-консультант по российскому праву с 20-летним опытом практики.
-
-ПРАВИЛА:
-1. Отвечай строго по российскому законодательству
-2. Всегда цитируй конкретные статьи: «согласно ст. 81 ТК РФ...»
-3. Давай пошаговые практические инструкции
-4. Объясняй юридические термины простым языком
-5. Предупреждай о рисках и сроках
-6. Формат: структурированный ответ, в конце блок ⚠️ ВАЖНО
-7. Язык: только русский
-8. Напоминай что это консультация, не заключение`;
-
-  if (areaKey && AREA_PROMPTS[areaKey]) {
-    base += `\n\nТЕКУЩИЙ РАЗДЕЛ: ${AREA_PROMPTS[areaKey]}`;
-  }
-  return base;
-}
-
-// ════════════════════════════════
-// STATE
-// ════════════════════════════════
-let history = [];
-let currentArea = null;
-let isLoading = false;
-
-// ════════════════════════════════
-// API КЛЮЧ
-// ════════════════════════════════
-function getKey() { return localStorage.getItem('lawyer_api_key') || ''; }
-function saveKey() {
-  const v = document.getElementById('keyInput').value.trim();
-  if (!v) return;
-  localStorage.setItem('lawyer_api_key', v);
-  closeModal();
-  updateKeyBtn();
-}
-function updateKeyBtn() {
-  const btn = document.getElementById('keyBtn');
-  const has = !!getKey();
-  btn.textContent = has ? '🔑 ✓' : '🔑 API';
-  btn.className = 'hdr-key-btn' + (has ? ' set' : '');
-}
-function openModal() {
-  document.getElementById('keyInput').value = getKey();
-  document.getElementById('keyModal').classList.add('on');
-}
-function closeModal() { document.getElementById('keyModal').classList.remove('on'); }
-function closeModalOutside(e) { if (e.target === document.getElementById('keyModal')) closeModal(); }
 
 // ════════════════════════════════
 // НАВИГАЦИЯ
@@ -634,7 +554,7 @@ async function sendMsg() {
   const text = input.value.trim();
   if (!text) return;
 
-  if (!getKey()) { openModal(); return; }
+  // built-in key
 
   input.value = '';
   input.style.height = 'auto';
@@ -647,34 +567,28 @@ async function sendMsg() {
   const typingEl = addBubble('ai', '', 'typing');
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': getKey(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        system: buildSystem(currentArea),
-        messages: history.slice(-20)
-      })
-    });
-
+    const msgs = history.slice(-20).map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+    const resp = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyD2d5_WOok1rMXIS5sRNQJeKHOLpOfV5z0',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: buildSystem(currentArea) }] },
+          contents: msgs
+        })
+      }
+    );
     typingEl.remove();
-
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
-      if (resp.status === 401) {
-        addBubble('ai', '❌ Неверный API ключ. Нажми 🔑 API и проверь ключ.', 'error');
-      } else {
-        addBubble('ai', '❌ Ошибка: ' + (err.error?.message || resp.status), 'error');
-      }
+      addBubble('ai', '❌ Ошибка: ' + (err.error?.message || resp.status), 'error');
     } else {
       const data = await resp.json();
-      const reply = data.content[0].text;
+      const reply = data.candidates[0].content.parts[0].text;
       history.push({ role: 'assistant', content: reply });
       if (history.length > 20) history = history.slice(-20);
       addBubble('ai', reply);
@@ -706,7 +620,6 @@ ta.addEventListener('keydown', function(e) {
 // ════════════════════════════════
 // INIT
 // ════════════════════════════════
-updateKeyBtn();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }

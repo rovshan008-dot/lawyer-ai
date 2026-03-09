@@ -2,7 +2,7 @@
   "name": "Юрист AI — Консультант",
   "short_name": "Юрист AI",
   "description": "Профессиональный юридический ИИ-консультант по российскому праву",
-  "start_url": "/",
+  "start_url": "/lawyer-ai/",
   "display": "standalone",
   "background_color": "#0a0e1a",
   "theme_color": "#c8a84b",
